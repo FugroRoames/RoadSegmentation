@@ -6,7 +6,7 @@ Summer internship project by Tom Vecchi.
 The goal of the code is to generate semantic segmentation masks for roads in aerial imagery, which can then be used as input features to the point classifier.
 
 ### Example:
-![ ](/home/tom/neural/roads/results/comparisons/sample_result.png  "Example of neural net output")
+![Sample image ](sample_result.png)
 Left: Input image (256x256x5, RGB+dx+dy). 
 Centre: Predicted mask output (256x256 grayscale).
 Right: Ground truth mask (256x256 grayscale).
@@ -23,15 +23,6 @@ The neural network takes in 256x256 pixel "tiles" corresponding to an area of 40
 
 I used [this github repo](https://github.com/mrgloom/keras-semantic-segmentation-example/blob/master/binary_segmentation/binary_crossentropy_example.py) as a starting point. I also got the data augmentation code and U-Net version 3 from [here](https://github.com/zhixuhao/unet).
 
-### Contents
- 5layer_classifier.py: Training script, 5 layer version
- feature_vis.py: Script for generating images that maximise output
- models.py: U-Net code 
- rgb_classifier.py: Training script, RGB-only version
- road_runner.py: Script for generating predicted road masks given input geometry
- util.py: Various shared/utility functions from the other scripts
- xy_classifier.py: Training script, DTM-only version
- 
 
 ### Expected folders:
 All code assumes the following subdirectories exist:
@@ -65,6 +56,7 @@ All code assumes the following subdirectories exist:
 
 ### Usage
 #### Training a model
+
 `python [5layer | xy | rgb]_classifier.py -m train --unet-version 1 --steps [int] --epochs [int] `
 
 Choose between the three versions depending on which input channels you want to use- 5 layers, DTM-only, or RGB-only. 
@@ -79,6 +71,8 @@ You can choose between different (untrained) u-net implementations using the `--
 
 
 __Options:__
+
+
 `--unet-version/-v [int]`: Which *untrained* unet implementation to use, see models.py for details. Give an int from 1 to 3. If unspecified, defaults to the corresponding model in ./past_models.
 
   `--steps [int] --epochs [int]` How long to train the network for, see the Keras site for details. Defaults: steps=28, epochs=1
