@@ -7,6 +7,7 @@ The goal of the code is to generate semantic segmentation masks for roads in aer
 
 ### Example:
 ![Sample image ](sample_result.png)
+
 Left: Input image (256x256x5, RGB+dx+dy). 
 Centre: Predicted mask output (256x256 grayscale).
 Right: Ground truth mask (256x256 grayscale).
@@ -119,6 +120,7 @@ Rather than trying to extract data from georepo straight into memory, it creates
 ### Data 
 I trained all the networks on 224 tiles representing mainly suburban, semi-rural and rural areas from Queensland and NSW, with a handful of inner-city tiles as well. 
 
+All data was obtained from the Roames georepository using Roames extraction tools.
 
 I experimented with different tile sizes and found that at sizes above 700 m, or below 200m, it was no longer able to highlight roads.
 
@@ -131,7 +133,5 @@ Note that the RGB, DTM, and ground truth tiles must all have the same name (exce
 ##### feature_vis.py
 The code in this file can be used to run gradient descent on the input pixels while keeping the weights constant. I based this on [an official Keras blog post](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html).
  
- 
-##### util.py
-The util.py file contains various miscellaneous code that can be used by all 3 scripts.
+
  
