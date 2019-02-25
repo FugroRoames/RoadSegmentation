@@ -1,9 +1,9 @@
-#Road Detection U-Net
-##Documentation
+# Road Segmentation U-Net
  
 
-###Goal:
-The neural net is designed to generate semantic segmentation masks for roads in aerial imagery. Specifically, it generates a per-pixel probability that that particular pixel is part of a road. This data can then be turned into a boolean segmentation mask, or fed into the point classifier, etc.
+### Goal:
+Summer internship project by Tom Vecchi. 
+The goal of the code is to generate semantic segmentation masks for roads in aerial imagery, which can then be used as input features to the point classifier.
 
 ### Example:
 ![ ](/home/tom/neural/roads/results/comparisons/sample_result.png  "Example of neural net output")
@@ -23,7 +23,7 @@ The neural network takes in 256x256 pixel "tiles" corresponding to an area of 40
 
 I used [this github repo](https://github.com/mrgloom/keras-semantic-segmentation-example/blob/master/binary_segmentation/binary_crossentropy_example.py) as a starting point. I also got the data augmentation code and U-Net version 3 from [here](https://github.com/zhixuhao/unet).
 
-###Contents
+### Contents
  5layer_classifier.py: Training script, 5 layer version
  feature_vis.py: Script for generating images that maximise output
  models.py: U-Net code 
@@ -57,17 +57,19 @@ All code assumes the following subdirectories exist:
 
 
 
-###Usage
-####Training a model
-`python [5layer | xy | rgb]_classifier.py -m train `
-Choose between the three versions depending on which input channels you want to use- 5 layers, DTM-only, or RGB-only. 
-Apart from that, all three classifier.py scripts have identical arguments. 
+### Usage
+#### Training a model
+`python [5layer | xy | rgb]_classifier.py -m train --unet-version 1 --steps [int] --epochs [int] `
 
-The -m (mode) argument determines what the script does. If you select train mode, it will train the model for the specified number of steps and epochs, then it will generate a prediction for visual inspection.
+Choose between the three versions depending on which input channels you want to use- 5 layers, DTM-only, or RGB-only. 
+ 
+The -m (mode) argument determines what the script does. To train the network, use `train`.
+
+You can choose between different (untrained) u-net implementations using the `--unet-version` argument.
 
  After all training epochs are completed, the script will save the final model and weights as `[rgb | dxy | 5layer].h5`in the current directory.
  
- It will then use the model it's just trained to generate a predicted mask and display it on the screen, along with the input and ground truth (if available).
+ It will then use the model it's just trained to generate a prediction and display it on the screen, along with the input and ground truth (if available).
 
 
 __Options:__
@@ -76,20 +78,20 @@ __Options:__
  `--image/-i [int] `Index of the tile to generate a prediction for. Default: 0
  `--unseen/-u [bool]` Whether to use tiles from the ./unseen instead of the ./training folder when predicting. Default: False
 
-####Notes
+#### Notes
 Keras imagedatagenerator class requires the number of training images to be an integer multiple of the batch size.
 
 Training images are drawn from the ./training folder using a Keras `imagedatagenerator` to perform real time data augmentation. Validation images are drawn from the same folder but without augmentation. The ./unseen folder doesn't have ground truth and so isn't usable for validation.
 
 
-####Predicting from training data
+#### Predicting from training data
 If you give `-m` as `predict`it will skip the training phase and just output a prediction of the image you've specified (using the index and unseen arguments as above).
 
 
 
 
  
-###Predicting from geometry with road_runner.py
+### Predicting from geometry with road_runner.py
 I found the classifier.py scripts were quite inconvenient from a usability point of view since the data must be manually extracted and placed in the correct folders before running the neural net. So I wrote a script which combines the data extraction and prediction steps into one automatic package.
 
 It has the following arguments:
@@ -105,7 +107,7 @@ Rather than trying to extract data from georepo straight into memory, it creates
 I tried to write road_runner so it could be used as part of a larger system or pipeline. It only extracts one RGB and txt file at a time, to reduce disk usage. This also means that if it crashes or is interrupted while processing a batch of data, it will still leave behind the predicted masks it generated before dying.
 
 
-###Data 
+### Data 
 I trained all the networks on 224 tiles representing mainly suburban, semi-rural and rural areas from Queensland and NSW, with a handful of inner-city tiles as well. 
 
 
@@ -116,11 +118,11 @@ Note that the RGB, DTM, and ground truth tiles must all have the same name (exce
  
  
 
-###Extras
-#####feature_vis.py
+### Extras
+##### feature_vis.py
 The code in this file can be used to run gradient descent on the input pixels while keeping the weights constant. I based this on [an official Keras blog post](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html). This allows us to find an input that maximises  the neural net's output layer. The results allow us to see what the neural net thinks the most road-like possible inputs are.
  
  
-#####util.py
+##### util.py
 The util.py file contains various miscellaneous code that can be used by all 3 scripts.
  
