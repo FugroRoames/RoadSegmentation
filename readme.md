@@ -13,7 +13,7 @@ Right: Ground truth mask (256x256 grayscale).
 
 
 
-###Description:
+### Description:
 The neural network takes in 256x256 pixel "tiles" corresponding to an area of 400x400 m. Tiles can have variable numbers of channels: either 
 1. the standard 3 channel RGB colour image, 
 2. a 2 channel grid of DTM gradients in the x- and y-axes, or 
@@ -38,17 +38,23 @@ All code assumes the following subdirectories exist:
 
  1 ./training : training data
  > training/rgb: png image tiles
+ 
  > training/txt: txt heightmap tiles
+ 
  > training/mask: ground truth tiles
   
  2 ./past_models: pretrained models with  weights
   > past_models/5layer_400x28.h5
+  
   > past_models/dxy_500x28.h5
+  
   > past_models/rgb_500x14.h5
   
   
 3 ./unseen: extra test images
+
 > unseen/rgb: png image tiles
+
 > unseen/txt: txt heightmap tiles 
 
 
@@ -74,8 +80,11 @@ You can choose between different (untrained) u-net implementations using the `--
 
 __Options:__
 `--unet-version/-v [int]`: Which *untrained* unet implementation to use, see models.py for details. Give an int from 1 to 3. If unspecified, defaults to the corresponding model in ./past_models.
+
   `--steps [int] --epochs [int]` How long to train the network for, see the Keras site for details. Defaults: steps=28, epochs=1
+  
  `--image/-i [int] `Index of the tile to generate a prediction for. Default: 0
+ 
  `--unseen/-u [bool]` Whether to use tiles from the ./unseen instead of the ./training folder when predicting. Default: False
 
 #### Notes
@@ -95,16 +104,22 @@ If you give `-m` as `predict`it will skip the training phase and just output a p
 I found the classifier.py scripts were quite inconvenient from a usability point of view since the data must be manually extracted and placed in the correct folders before running the neural net. So I wrote a script which combines the data extraction and prediction steps into one automatic package.
 
 It has the following arguments:
+
 `-geometry %s`: KML or WKT geometry file
+
 `-layers %s`: Which channels to use, give one of: rgb, dtm or 5layer
+
 `-outputdir %s`: Directory to save predictions in. Default: Current dir
+
 `-loglevel %s`: Output verbosity, give one of: Normal, Progress or Verbose. Default: Normal
+
 `--show`: Display each predicted tile onscreen as it's generated
+
 `--cleanup`: Delete RGB and txt files after they are used 
 
 Rather than trying to extract data from georepo straight into memory, it creates a temporary working folder and extracts everything there, then optionally deletes all working data after it's used.
 
-I tried to write road_runner so it could be used as part of a larger system or pipeline. It only extracts one RGB and txt file at a time, to reduce disk usage. This also means that if it crashes or is interrupted while processing a batch of data, it will still leave behind the predicted masks it generated before dying.
+
 
 
 ### Data 
@@ -120,7 +135,7 @@ Note that the RGB, DTM, and ground truth tiles must all have the same name (exce
 
 ### Extras
 ##### feature_vis.py
-The code in this file can be used to run gradient descent on the input pixels while keeping the weights constant. I based this on [an official Keras blog post](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html). This allows us to find an input that maximises  the neural net's output layer. The results allow us to see what the neural net thinks the most road-like possible inputs are.
+The code in this file can be used to run gradient descent on the input pixels while keeping the weights constant. I based this on [an official Keras blog post](https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html).
  
  
 ##### util.py
