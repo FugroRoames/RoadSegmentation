@@ -1,3 +1,7 @@
+#U-net models- the guts of the code
+#unet1, segnet are from https://github.com/mrgloom/keras-semantic-segmentation-example/blob/master/binary_segmentation/binary_crossentropy_example.py
+#unet3 is from https://github.com/zhixuhao/unet
+
 from keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, Conv2D, Reshape, Conv2DTranspose
 from keras.layers import add, concatenate
 from keras.layers.normalization import BatchNormalization
